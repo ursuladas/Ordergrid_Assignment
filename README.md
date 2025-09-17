@@ -13,12 +13,25 @@ This assignment focuses on generating 30-day daily demand forecasts for a set of
 2. Fill NaN Values with 0
 
 ## Feature Engineering
-1. Calendar Features - Day of Week, Day of Year, Month of Year, Cyclical encoding of the same, Summer Indicator
-2. Lag Features, Lag Differences, Lag Ratios
-3. Level Shifts, Trends, Momentum
-4. Rolling Statistics
-5. Label Encoding of categorical variable GROUP
 
+1.  GROUP encoded using LabelEncoder. Converts categorical SKU group information into numeric form for ML models.
+
+2. Trend & Momentum Features
+    * trend: linear sequence over time to capture long-term growth or decline.
+    *  momentum_{1,3,7}: short-term changes to capture recent spikes or drops.
+    *  Helps models detect underlying trends and recent directional changes.
+
+3. Rolling Statistics -
+
+    * Rolling mean, median, std, variance, min, max over multiple windows (7, 15, 30, 60 days).
+    * Captures short- and medium-term patterns and volatility in the series.
+
+4. Lag Features - Lag values, differences, and ratios for 7, 14, 28 days. Provides historical context for the model, allowing it to learn temporal dependencies.
+
+5. Level Shift Features - Difference from rolling mean and detection of significant shifts (above 2σ).Captures abrupt changes or structural breaks in the series, which can indicate new demand regimes.
+
+6. Calendar Features - Day, month, day of week, day of year, and cyclical encodings (sin/cos) for day/week/month/year.Weekend, month-end, and summer indicators. Captures seasonality, cyclical patterns that influence demand.
+   
 ## Splitting Strategy
 1. Time-based splitting with variations depending on zero share
 
