@@ -23,6 +23,9 @@ This assignment focuses on generating 30-day daily demand forecasts for a set of
 1. Time-based splitting with variations depending on zero share
 
 ## Models Implemented
+
+Models are selected per SKU based on their zero share. MAE is used for training the ML models since the data has outliers, and MAE is more robust towards outliers.
+
 1. XGBoost – for SKUs with low zero share.
 
 2. Zero-Inflated Poisson (ZIP) – for SKUs with high zero share and sufficient history.
@@ -31,12 +34,22 @@ This assignment focuses on generating 30-day daily demand forecasts for a set of
 
 4. Ensemble (XGBoost + LightGBM) – for SKUs with moderate zero share.
 
+### Reasoning of Model Choice:
+
+a. High zero-share series are intermittent. Zero-inflated models handle excess zeros statistically when sufficient history exists, while Croston’s method is effective for short intermittent series.
+
+b. Moderate zero-share series benefit from Ensemble ML models capturing non-linear patterns and complex dependencies, while XGBoost is sufficient when zeros are rare. Both these models are less prone to outliers as well
+
 ## Evaluation Metrics
+
   1. MAE
   2. MSE
   3. RMSE
   4. R^2
   5. MAPE
+
+However, MAPE can be misleading or extremely large for series with many zero values, since dividing by zero (or near-zero) inflates the percentage error. For intermittent demand series, other metrics are more reliable indicators of performance.
+
 
 ## Prediction Intervals
 1. For XGBoost and Ensemble Models - Prediction intervals are computed using residuals from historical forecasts: the standard deviation of the residuals is multiplied by the z-score for the desired confidence level and added/subtracted from the point forecast, giving a data-driven uncertainty range around predictions.
